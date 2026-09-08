@@ -2,27 +2,13 @@ pipeline {
     agent any
 
     stages {
-
-        stage('Checkout') {
+        stage('Check Tools') {
             steps {
-                checkout scm
+                sh 'terraform version'
+                sh 'ansible --version'
+                sh 'git --version'
+                sh 'aws --version'
             }
-        }
-
-        stage('Deploy Infrastructure') {
-            steps {
-                sh './deploy.sh'
-            }
-        }
-    }
-
-    post {
-        success {
-            echo 'Royal Hotel infrastructure deployment completed successfully.'
-        }
-
-        failure {
-            echo 'Royal Hotel infrastructure deployment failed.'
         }
     }
 }
