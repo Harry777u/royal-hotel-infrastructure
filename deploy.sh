@@ -16,7 +16,7 @@ cd ..
 
 cat > ansible/inventory.ini <<EOF
 [developer]
-$EC2_IP ansible_user=ubuntu ansible_ssh_private_key_file=/home/labuser/royal-hotel-infrastructure/royal-hotel-key.pem
+$EC2_IP ansible_user=$SSH_USER ansible_ssh_private_key_file=$SSH_KEY
 EOF
 
 echo "=== Testing Ansible Connection ==="

@@ -1,6 +1,7 @@
 pipeline {
     agent any
-        environment {
+
+    environment {
         AWS_ACCESS_KEY_ID = credentials('aws-access-key')
         AWS_SECRET_ACCESS_KEY = credentials('aws-secret-key')
         AWS_DEFAULT_REGION = 'us-east-1'
@@ -16,18 +17,31 @@ pipeline {
 
         stage('Terraform Init') {
             steps {
-        sh 'cd terraform && terraform init'
+                sh 'cd terraform && terraform init'
             }
-       }
+        }
 
         stage('Terraform Validate') {
             steps {
-        sh 'cd terraform && terraform validate'
+                sh 'cd terraform && terraform validate'
             }
-       }
+        }
+
         stage('Deploy Infrastructure') {
             steps {
-                sh './deploy.sh'
+                withCredentials([
+                    sshUserPrivateKey(
+                        credentialsId: 'royal-hotel-ssh-key',
+                        keyFileVariable: 'SSH_KEY',
+                        usernameVariable: 'SSH_USER'
+                    )
+                ]) {
+                    sh '''
+                        export SSH_KEY
+                        export SSH_USER
+                        ./deploy.sh
+                    '''
+                }
             }
         }
     }
