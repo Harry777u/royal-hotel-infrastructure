@@ -1,0 +1,31 @@
+---
+- name: Configure Royal Hotel Developer VM
+  hosts: developer
+  become: yes
+  gather_facts: yes
+
+  tasks:
+
+    - name: Update apt package cache
+      apt:
+        update_cache: yes
+
+    - name: Install developer tools
+      apt:
+        name:
+          - git
+          - curl
+          - unzip
+          - vim
+        state: present
+
+    - name: Create developer user
+      user:
+        name: developer
+        shell: /bin/bash
+        create_home: yes
+        state: present
+
+    - name: Display configuration completion message
+      debug:
+        msg: "Royal Hotel Developer VM configuration completed successfully"
